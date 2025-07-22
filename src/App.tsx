@@ -1,7 +1,13 @@
+import { BrowserRouter } from "react-router-dom";
 import "./App.css";
+import Pokemons from "./pages/pokemons";
 
 function App() {
-  return <p className="p-2 w-full bg-red-900">lets start</p>;
+  return (
+    <BrowserRouter>
+      <Pokemons />
+    </BrowserRouter>
+  );
 }
 
 export default App;
