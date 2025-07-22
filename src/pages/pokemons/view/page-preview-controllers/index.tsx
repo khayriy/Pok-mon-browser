@@ -1,4 +1,4 @@
-import { usePreviewMode } from "../../../hooks/usePreviewMode";
+import { usePreviewMode } from "../../../../hooks/usePreviewMode";
 
 const PagePreviewControllers = () => {
   const { previewMode, setPreviewMode } = usePreviewMode();

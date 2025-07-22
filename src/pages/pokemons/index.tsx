@@ -1,74 +1,65 @@
-// pages/PaginationView.tsx
-import { useState } from "react";
-import Header from "./header";
-import PagePreviewControllers from "./page-preview-controllers";
 import { usePreviewMode } from "../../hooks/usePreviewMode";
 import Pagination from "../../components/pagination";
-import List from "./pokemeon-list";
+import Header from "./view/header";
+import PagePreviewControllers from "./view/page-preview-controllers";
+import PokemeonList from "./view/pokemeon-list";
+import { usePagination } from "../../hooks/usePagination";
+import usePokemons from "./usePokemons";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
+import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import Skeleton from "../../components/skeleton";
+
+const ITEMS_PER_PAGE = 20;
 
 const Pokemons = () => {
-  
   const { previewMode } = usePreviewMode();
-  const [isLoading, setIsLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const initialPage = Number(searchParams.get("page")) || 1;
 
-  const dummyPokemonList = [
-    {
-      name: "bulbasaur",
-      url: "https://pokeapi.co/api/v2/pokemon/1/",
-    },
-    {
-      name: "ivysaur",
-      url: "https://pokeapi.co/api/v2/pokemon/2/",
-    },
-    {
-      name: "venusaur",
-      url: "https://pokeapi.co/api/v2/pokemon/3/",
-    },
-    {
-      name: "charmander",
-      url: "https://pokeapi.co/api/v2/pokemon/4/",
-    },
-    {
-      name: "charmeleon",
-      url: "https://pokeapi.co/api/v2/pokemon/5/",
-    },
-    {
-      name: "charizard",
-      url: "https://pokeapi.co/api/v2/pokemon/6/",
-    },
-    {
-      name: "squirtle",
-      url: "https://pokeapi.co/api/v2/pokemon/7/",
-    },
-    {
-      name: "wartortle",
-      url: "https://pokeapi.co/api/v2/pokemon/8/",
-    },
-    {
-      name: "blastoise",
-      url: "https://pokeapi.co/api/v2/pokemon/9/",
-    },
-    {
-      name: "caterpie",
-      url: "https://pokeapi.co/api/v2/pokemon/10/",
-    },
-  ].map((pokemon, index) => ({
-    ...pokemon,
-    id: (index + 1).toString(),
-  }));
+  // Get pokemon data based on preview mode
+  const { data, totalCount, isLoading, fetchNextPage, hasNextPage } =
+    usePokemons(initialPage, ITEMS_PER_PAGE, previewMode);
 
+  // Initialize pagination (only used in pagination mode)
+  const { currentPage, setPage, totalPages } = usePagination({
+    totalItems: totalCount,
+    itemsPerPage: ITEMS_PER_PAGE,
+    initialPage,
+  });
+
+  // Infinite scroll trigger
+  const loadMoreRef = useInfiniteScroll(fetchNextPage, hasNextPage);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
   return (
     <div className="container mx-auto p-2">
       <Header />
       <PagePreviewControllers />
-      <List isLoading={isLoading} pokemons={dummyPokemonList} />
-      {previewMode === "pagination" && <Pagination />}
+      <PokemeonList isLoading={isLoading} pokemons={data ?? []} />
+
+      {/* Infinite scroll marker (only visible in infinite mode) */}
+      {previewMode === "infinite" && (
+        <div
+          ref={loadMoreRef}
+          className="h-10 flex items-center justify-center"
+        >
+          {isLoading && data && data?.length > 0 && <Skeleton />}
+        </div>
+      )}
+
+      {/* Pagination controls (only visible in pagination mode) */}
+      {previewMode === "pagination" && (
+        <Pagination
+          page={currentPage}
+          total_pages={totalPages}
+          handlePageChange={setPage}
+        />
+      )}
     </div>
   );
 };
-
-         
-
-     
 
 export default Pokemons;

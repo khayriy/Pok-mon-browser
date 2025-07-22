@@ -1,5 +1,8 @@
-import PokemonCard from '../pokemon-card';
-import Skeleton from '../../../components/skeleton';
+import { Suspense } from 'react';
+import Skeleton from '../../../../components/skeleton';
+import { lazy } from 'react';
+
+const PokemonCard = lazy(() => import('../pokemon-card'));
 
 interface Pokemon {
   name: string;
@@ -17,19 +20,18 @@ const PokemeonList = ({ isLoading, pokemons }: Props) => {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {isLoading
+      {isLoading && pokemons.length === 0
         ? skeletons.map((_, index) => <Skeleton key={index} />)
         : pokemons.map((pokemon) => (
-            <PokemonCard
-              key={pokemon.name}
-              name={pokemon.name}
-              number={pokemon.id}
-            />
+            <Suspense fallback={<Skeleton />} key={pokemon.id}>
+              <PokemonCard
+                name={pokemon.name}
+                id={pokemon.id}
+              />
+            </Suspense>
           ))}
     </div>
   );
 };
-
-
 
 export default PokemeonList;
