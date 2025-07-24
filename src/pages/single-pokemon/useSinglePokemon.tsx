@@ -1,9 +1,10 @@
 // hooks/usePokemonDetails.ts
 import { useQuery } from "@tanstack/react-query";
 import { getSinglePokemon } from "./services";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const usePokemonDetails = (idOrName: string | undefined) => {
+  const location = useLocation();
   const navigate = useNavigate()  
   const { isLoading , data , isError} = useQuery({
     queryKey: ["pokemon", idOrName],
@@ -11,8 +12,13 @@ const usePokemonDetails = (idOrName: string | undefined) => {
     enabled: !!idOrName,
   });
 
+  
+
   const navigateToList = ()=>{
-    navigate('/')
+     navigate({
+      pathname: '/',
+      search: location.search, 
+    });
   }
   return {
     data , 

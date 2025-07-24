@@ -12,10 +12,10 @@ const PokemonCard: React.FC<Props> = ({ name, id, image }) => {
 
   const handleClick = () => {
     if (id) {
-      navigate({
-        pathname: `/pokemon/${id}`,
-        search: "", // explicitly removes query params
-      });
+      navigate(
+         `/pokemon/${id}`,
+       
+      );
     }
   };
 
