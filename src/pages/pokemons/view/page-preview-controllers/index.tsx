@@ -9,7 +9,7 @@ const PagePreviewControllers = () => {
         className={`px-6 py-2 rounded  ${
           previewMode === "pagination"
             ? "bg-slate-900 text-white "
-            : "bg-white hover:bg-gray-100"
+            : "bg-white hover:bg-gray-100 dark:text-gray-800"
         }`}
         onClick={() => setPreviewMode("pagination")}
       >
@@ -19,7 +19,7 @@ const PagePreviewControllers = () => {
         className={`px-6 py-2 rounded  ${
           previewMode === "infinite"
             ? "bg-slate-900 text-white hover:bg-slate-800"
-            : "bg-white hover:bg-gray-100"
+            : "bg-white hover:bg-gray-100 dark:text-gray-800"
         }`}
         onClick={() => setPreviewMode("infinite")}
       >

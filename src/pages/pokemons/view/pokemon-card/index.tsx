@@ -14,7 +14,7 @@ const PokemonCard: React.FC<Props> = ({ name, id, image }) => {
     if (id) {
       navigate(
          `/pokemon/${id}`,
-       
+      
       );
     }
   };

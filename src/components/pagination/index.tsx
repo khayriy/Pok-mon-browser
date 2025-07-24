@@ -40,7 +40,7 @@ const Pagination = ({
                 ? "border-none"
                 : page === num
                 ? "bg-slate-900 text-white font-bold"
-                : "bg-white hover:bg-gray-100"
+                : "bg-white hover:bg-gray-100  dark:text-black"
             }`}
             onClick={() => num !== "..." && handlePageChange(Number(num))}
             disabled={num === "..."}
